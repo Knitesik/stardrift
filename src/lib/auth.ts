@@ -35,6 +35,7 @@ export const auth = betterAuth({
 	rateLimit: { enabled: true, window: 60, max: 30 },
 	// must stay last so it can set cookies on TanStack Start responses
 	plugins: [tanstackStartCookies()],
+	trustedOrigins: [process.env.BETTER_AUTH_URL as string],
 });
 
 export type Session = typeof auth.$Infer.Session;
