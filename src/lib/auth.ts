@@ -4,6 +4,18 @@ import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { db } from "#/db/index";
 import { account, session, user, verification } from "#/db/schema";
 
+/**
+ * Origins allowed to call the auth API. Better Auth compares bare origins, so
+ * a trailing slash or path in the env value would otherwise never match.
+ */
+const trustedOrigins = [
+	...new Set(
+		[process.env.BETTER_AUTH_URL, process.env.VITE_SITE_URL]
+			.filter((url): url is string => Boolean(url))
+			.map((url) => new URL(url).origin),
+	),
+];
+
 export const auth = betterAuth({
 	baseURL: process.env.BETTER_AUTH_URL,
 	secret: process.env.BETTER_AUTH_SECRET,
@@ -35,7 +47,7 @@ export const auth = betterAuth({
 	rateLimit: { enabled: true, window: 60, max: 30 },
 	// must stay last so it can set cookies on TanStack Start responses
 	plugins: [tanstackStartCookies()],
-	trustedOrigins: [process.env.BETTER_AUTH_URL as string],
+	trustedOrigins,
 });
 
 export type Session = typeof auth.$Infer.Session;

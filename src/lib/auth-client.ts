@@ -5,12 +5,12 @@ import type { auth } from "./auth";
 export const authClient = createAuthClient({
 	// types only: lets the client see fields like user.role
 	plugins: [inferAdditionalFields<typeof auth>()],
-	basePath: process.env.BETTER_AUTH_URL as string,
-	baseURL: process.env.BETTER_AUTH_URL as string,
+	basePath: process.env.VITE_SITE_URL as string,
+	baseURL: process.env.VITE_SITE_URL as string,
 	fetchOptions: {
 		credentials: "include",
 		headers: {
-			Origin: import.meta.env.BETTER_AUTH_URL,
+			Origin: import.meta.env.VITE_SITE_URL,
 		},
 	},
 });
