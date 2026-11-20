@@ -33,6 +33,7 @@ export const auth = betterAuth({
 		google: {
 			clientId: process.env.GOOGLE_CLIENT_ID as string,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+			redirectURI: `${process.env.VITE_SITE_URL}/api/auth/callback/google`,
 			// the name doubles as the party call sign, which is capped at 20
 			mapProfileToUser: (profile) => ({
 				name: (profile.given_name || profile.name || "Pilot").slice(0, 20),
