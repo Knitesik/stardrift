@@ -20,7 +20,7 @@ import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
 // Google Analytics 4 measurement id; replace the placeholder with yours
-const GA_MEASUREMENT_ID = "GTM-W7CTM57L";
+const GA_MEASUREMENT_ID = "G-51PPVEVXMX";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
