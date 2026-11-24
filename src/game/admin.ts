@@ -1,5 +1,8 @@
-import { createServerFn } from "@tanstack/react-start";
+import { createIsomorphicFn, createServerFn } from "@tanstack/react-start";
+import { getRequestHeaders } from "@tanstack/react-start/server";
 import { z } from "zod";
+import { auth } from "#/lib/auth";
+import { authClient } from "#/lib/auth-client";
 import type { PartyEffect } from "#/party/protocol";
 import type { TierId } from "./rarity";
 
@@ -63,6 +66,21 @@ async function requireAdmin() {
 		throw new Error(session ? "Admins only" : "Sign in first");
 	}
 }
+
+/**
+ * Whether the viewer is an admin. On the server it reads the incoming
+ * request's cookies (the auth client's fetch would carry none during SSR);
+ * in the browser it asks the auth API, which gets the cookies itself.
+ */
+export const getIsAdmin = createIsomorphicFn()
+	.server(async (): Promise<boolean> => {
+		const session = await auth.api.getSession({ headers: getRequestHeaders() });
+		return session?.user.role === "admin";
+	})
+	.client(async (): Promise<boolean> => {
+		const { data } = await authClient.getSession();
+		return data?.user.role === "admin";
+	});
 
 /** Every match played, newest first, for admins. */
 export const listMatches = createServerFn({ method: "GET" })

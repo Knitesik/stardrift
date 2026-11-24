@@ -5,6 +5,7 @@ import { Loading, Panel, Shell } from "#/components/game/Shell";
 import {
 	type AdminAnswer,
 	type AdminMatch,
+	getIsAdmin,
 	listMatches,
 	type MatchMode,
 } from "#/game/admin";
@@ -22,8 +23,7 @@ export const Route = createFileRoute("/admin")({
 			noindex: true,
 		}),
 	beforeLoad: async () => {
-		const session = await authClient.getSession();
-		if (!session || session.data?.user.role !== "admin") {
+		if (!(await getIsAdmin())) {
 			throw notFound();
 		}
 	},
