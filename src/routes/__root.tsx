@@ -19,6 +19,9 @@ import {
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
 
+// Google Analytics 4 measurement id; replace the placeholder with yours
+const GA_MEASUREMENT_ID = "GTM-W7CTM57L";
+
 interface MyRouterContext {
 	queryClient: QueryClient;
 }
@@ -89,6 +92,20 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600&display=swap",
 			},
 			{ rel: "stylesheet", href: appCss },
+		],
+		// page views on client-side navigation come from GA's enhanced
+		// measurement ("page changes based on browser history events")
+		scripts: [
+			{
+				src: `https://www.googletagmanager.com/gtm.js?id=${GA_MEASUREMENT_ID}`,
+				async: true,
+			},
+			{
+				children: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_MEASUREMENT_ID}');`,
+			},
 		],
 	}),
 	notFoundComponent: NotFound,
