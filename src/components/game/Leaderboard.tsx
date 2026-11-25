@@ -74,6 +74,14 @@ export function NightLeaderboard({ dateKey }: { dateKey: string }) {
 									<span className="text-[var(--sd-dim)]">{e.rank}</span>
 									<span className="min-w-0 truncate font-semibold">
 										{e.name}
+										{e.supporter && (
+											<span
+												className="ml-1 text-[var(--sd-gold)]"
+												title="Supporter"
+											>
+												★<span className="sr-only"> supporter</span>
+											</span>
+										)}
 										{e.isYou && (
 											<span className="ml-1.5 text-xs text-[var(--sd-gold)]">
 												(YOU)

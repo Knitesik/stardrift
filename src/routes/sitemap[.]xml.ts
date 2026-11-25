@@ -17,6 +17,7 @@ function sitemap() {
 		{ path: "/unlimited", changefreq: "monthly", priority: 0.7 },
 		{ path: "/party", changefreq: "monthly", priority: 0.7 },
 		{ path: "/archive", lastmod: today, changefreq: "daily", priority: 0.6 },
+		{ path: "/support", changefreq: "monthly", priority: 0.3 },
 		// a night's prompts never change once it has opened
 		...archiveKeys(today).map(
 			(date): Entry => ({

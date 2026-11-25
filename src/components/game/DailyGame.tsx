@@ -1,8 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { dayNumber } from "#/game/engine";
-import { useSave, useSaveActions } from "#/game/storage";
+import {
+	type SaveData,
+	streaks,
+	useSave,
+	useSaveActions,
+} from "#/game/storage";
 import { getNightRound } from "#/game/submit";
+import { getSupportStatus } from "#/game/support";
 import { Game } from "./Game";
 import { NightLeaderboard } from "./Leaderboard";
 import { Loading, Panel } from "./Shell";
@@ -83,8 +89,35 @@ export function DailyGame({
 			resume={complete ? undefined : unfinished}
 			onProgress={(run) => saveProgress(dateKey, run)}
 			onFinish={(run) => recordDaily(dateKey, run)}
-			notice={<NightLeaderboard dateKey={dateKey} />}
+			notice={
+				<>
+					<NightLeaderboard dateKey={dateKey} />
+					<SupportNudge save={save} today={today} />
+				</>
+			}
 		/>
+	);
+}
+
+/** Players back this many nights in a row get a quiet line asking for support. */
+const SUPPORT_NUDGE_STREAK = 3;
+
+function SupportNudge({ save, today }: { save: SaveData; today: string }) {
+	const regular = streaks(save, today).current >= SUPPORT_NUDGE_STREAK;
+	const status = useQuery({
+		queryKey: ["support-status"],
+		queryFn: () => getSupportStatus(),
+		enabled: regular,
+		staleTime: 5 * 60_000,
+	});
+	if (!regular || !status.data?.enabled || status.data.supporter) return null;
+	return (
+		<p className="mt-6 text-center text-sm text-[var(--sd-dim)]">
+			Enjoying Stardrift?{" "}
+			<Link to="/support" className="text-[var(--sd-gold)] underline">
+				Support the night sky →
+			</Link>
+		</p>
 	);
 }
 

@@ -153,9 +153,14 @@ function Footer() {
 					Stardrift
 					{today && ` · Night ${String(dayNumber(today)).padStart(3, "0")}`}
 				</span>
-				<span className="flex items-center gap-2">
-					<span className="sd-live-dot text-[var(--sd-cyan)]" />
-					New sky at nightfall
+				<span className="flex items-center gap-5">
+					<Link to="/support" className="hover:text-[var(--sd-gold)]">
+						Support
+					</Link>
+					<span className="flex items-center gap-2">
+						<span className="sd-live-dot text-[var(--sd-cyan)]" />
+						New sky at nightfall
+					</span>
 				</span>
 			</div>
 		</footer>

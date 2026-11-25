@@ -17,6 +17,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StatsRouteImport } from './routes/stats'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as UnlimitedRouteImport } from './routes/unlimited'
 import { Route as ArchiveIndexRouteImport } from './routes/archive.index'
 import { Route as ArchiveDateRouteImport } from './routes/archive.$date'
@@ -64,6 +65,11 @@ const StatsRoute = StatsRouteImport.update({
   path: '/stats',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UnlimitedRoute = UnlimitedRouteImport.update({
   id: '/unlimited',
   path: '/unlimited',
@@ -104,6 +110,7 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stats': typeof StatsRoute
+  '/support': typeof SupportRoute
   '/unlimited': typeof UnlimitedRoute
   '/archive/$date': typeof ArchiveDateRoute
   '/party/$code': typeof PartyCodeRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stats': typeof StatsRoute
+  '/support': typeof SupportRoute
   '/unlimited': typeof UnlimitedRoute
   '/archive/$date': typeof ArchiveDateRoute
   '/party/$code': typeof PartyCodeRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stats': typeof StatsRoute
+  '/support': typeof SupportRoute
   '/unlimited': typeof UnlimitedRoute
   '/archive/$date': typeof ArchiveDateRoute
   '/party/$code': typeof PartyCodeRoute
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/stats'
+    | '/support'
     | '/unlimited'
     | '/archive/$date'
     | '/party/$code'
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/stats'
+    | '/support'
     | '/unlimited'
     | '/archive/$date'
     | '/party/$code'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/stats'
+    | '/support'
     | '/unlimited'
     | '/archive/$date'
     | '/party/$code'
@@ -204,6 +216,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StatsRoute: typeof StatsRoute
+  SupportRoute: typeof SupportRoute
   UnlimitedRoute: typeof UnlimitedRoute
   ArchiveDateRoute: typeof ArchiveDateRoute
   PartyCodeRoute: typeof PartyCodeRoute
@@ -270,6 +283,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StatsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/unlimited': {
       id: '/unlimited'
       path: '/unlimited'
@@ -324,6 +344,7 @@ const rootRouteChildren: RootRouteChildren = {
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StatsRoute: StatsRoute,
+  SupportRoute: SupportRoute,
   UnlimitedRoute: UnlimitedRoute,
   ArchiveDateRoute: ArchiveDateRoute,
   PartyCodeRoute: PartyCodeRoute,

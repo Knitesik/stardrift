@@ -7,6 +7,8 @@ export interface LeaderboardEntry {
 	/** initials for other players; the viewer's own name in full */
 	name: string;
 	isYou: boolean;
+	/** has a paid support order: shown as a star */
+	supporter: boolean;
 	km: number;
 	correct: number;
 }

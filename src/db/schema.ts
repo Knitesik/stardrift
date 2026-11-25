@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
 	boolean,
 	doublePrecision,
@@ -229,5 +230,33 @@ export const matches = pgTable(
 		index("matches_finished_idx").on(t.finishedAt),
 		index("matches_player_idx").on(t.playerId),
 		index("matches_party_idx").on(t.partyGame),
+	],
+);
+
+/* ───────── Supporters ───────── */
+
+/**
+ * One row per paid Polar order. A signed-in checkout carries the user's id;
+ * a guest's carries only the email they typed, which still earns the badge
+ * once an account with that email exists.
+ */
+export const supporters = pgTable(
+	"supporters",
+	{
+		/** Polar order id, so a redelivered webhook can't add a row twice */
+		orderId: text("order_id").primaryKey(),
+		userId: text("user_id").references(() => user.id, {
+			onDelete: "set null",
+		}),
+		email: text().notNull(),
+		/** in the smallest currency unit, e.g. cents */
+		amount: integer().notNull(),
+		currency: text().notNull(),
+		refunded: boolean().notNull().default(false),
+		createdAt: timestamp("created_at").notNull().defaultNow(),
+	},
+	(t) => [
+		index("supporters_user_idx").on(t.userId),
+		index("supporters_email_idx").on(sql`lower(${t.email})`),
 	],
 );

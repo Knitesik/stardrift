@@ -43,6 +43,13 @@
       "when": 1795583880363,
       "tag": "0005_empty_crystal",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1795586292181,
+      "tag": "0006_absurd_cassandra_nova",
+      "breakpoints": true
     }
   ]
 }

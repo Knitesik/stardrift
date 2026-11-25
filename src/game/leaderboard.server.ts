@@ -8,6 +8,7 @@ import { db } from "#/db/index";
 import { dailyRuns, players, user } from "#/db/schema";
 import { auth } from "#/lib/auth";
 import type { Leaderboard } from "./leaderboard";
+import { isSupporter } from "./support.server";
 
 const TOP = 10;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -64,6 +65,10 @@ export async function rankNight(
 			.select({
 				playerId: dailyRuns.playerId,
 				name: user.name,
+				supporter:
+					sql<boolean>`coalesce(${isSupporter(user.id, user.email)}, false)`.as(
+						"supporter",
+					),
 				finishedAt: dailyRuns.finishedAt,
 				total: sql<number>`count(*) over ()::int`.as("total"),
 				km: km.as("km"),
@@ -100,6 +105,7 @@ export async function rankNight(
 				rank: r.rank,
 				name: isYou ? r.name?.trim() || "Guest" : initials(r.name),
 				isYou,
+				supporter: Boolean(r.supporter),
 				km: r.km,
 				correct: r.correct,
 			};
