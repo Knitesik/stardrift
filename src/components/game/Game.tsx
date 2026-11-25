@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+	type ReactNode,
+	useCallback,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import crossIcon from "#/assets/icon_crossSmall.png";
 import warnIcon from "#/assets/icon_exclamationSmall.png";
 import plusIcon from "#/assets/icon_plusSmall.png";
@@ -32,6 +38,8 @@ interface GameProps {
 	resume?: RunProgress;
 	onPlayAgain?: () => void;
 	playAgainLabel?: string;
+	/** shown on the results screen, under the buttons */
+	notice?: ReactNode;
 }
 
 /** Eased number for the altitude readout. */
@@ -70,6 +78,7 @@ export function Game({
 	resume,
 	onPlayAgain,
 	playAgainLabel = "Fly again",
+	notice,
 }: GameProps) {
 	const start = finished ?? resume;
 	const [phase, setPhase] = useState<Phase>(finished ? "done" : "ready");
@@ -435,6 +444,7 @@ export function Game({
 					flight={flight}
 					onPlayAgain={onPlayAgain}
 					playAgainLabel={playAgainLabel}
+					notice={notice}
 				/>
 			)}
 		</>
@@ -447,12 +457,14 @@ function Results({
 	flight,
 	onPlayAgain,
 	playAgainLabel,
+	notice,
 }: {
 	label: string;
 	round: Prompt[];
 	flight: FlightStep[];
 	onPlayAgain?: () => void;
 	playAgainLabel: string;
+	notice?: ReactNode;
 }) {
 	const [copied, setCopied] = useState(false);
 	const [reveal, setReveal] = useState<PromptReveal[] | null>(null);
@@ -508,6 +520,8 @@ function Results({
 					</button>
 				)}
 			</div>
+
+			{notice}
 
 			<ol className="mt-6 grid gap-3">
 				{round.map((p, i) => {

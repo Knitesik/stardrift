@@ -93,7 +93,9 @@ export const user = pgTable("user", {
 	emailVerified: boolean("email_verified").notNull().default(false),
 	image: text(),
 	/** "admin" can see every match; grant with `pnpm admin:grant <email>` */
-	role: text({ enum: ["user", "admin"] }).notNull().default("user"),
+	role: text({ enum: ["user", "admin"] })
+		.notNull()
+		.default("user"),
 	createdAt: timestamp("created_at").notNull().defaultNow(),
 	updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -179,7 +181,11 @@ export const dailyRuns = pgTable(
 		finishedAt: timestamp("finished_at"),
 		updatedAt: timestamp("updated_at").notNull().defaultNow(),
 	},
-	(t) => [primaryKey({ columns: [t.playerId, t.date] })],
+	(t) => [
+		primaryKey({ columns: [t.playerId, t.date] }),
+		// the nightly leaderboard reads one date across all players
+		index("daily_runs_date_idx").on(t.date),
+	],
 );
 
 /** Running totals for unlimited mode. */

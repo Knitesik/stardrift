@@ -152,7 +152,14 @@ export function useSaveActions() {
 			recordDaily: (dateKey: string, run: RunProgress) =>
 				update(
 					(d) => withDaily(d, dateKey, run),
-					() => api.recordDaily({ data: { date: dateKey, run } }),
+					async () => {
+						const saved = await api.recordDaily({
+							data: { date: dateKey, run },
+						});
+						// the board was probably fetched before this run landed
+						qc.invalidateQueries({ queryKey: ["leaderboard", dateKey] });
+						return saved;
+					},
 				),
 			recordUnlimited: (run: RunProgress) =>
 				update(

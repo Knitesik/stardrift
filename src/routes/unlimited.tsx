@@ -1,12 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CenteredLoading } from "#/components/game/DailyGame";
 import { Game } from "#/components/game/Game";
 import { Panel, Shell } from "#/components/game/Shell";
-import { useSaveActions } from "#/game/storage";
+import { useSave, useSaveActions } from "#/game/storage";
 import { getRandomRound } from "#/game/submit";
+import { authClient } from "#/lib/auth-client";
 import { seo } from "#/lib/seo";
+
+/** Guests are asked to sign in from this many finished flights on. */
+const SIGN_IN_NUDGE_AFTER = 3;
+const NUDGE_DISMISSED_KEY = "sd_signin_nudge_dismissed";
 
 export const Route = createFileRoute("/unlimited")({
 	head: () =>
@@ -56,10 +61,69 @@ function Unlimited() {
 					onFinish={recordUnlimited}
 					onPlayAgain={() => setFlight((n) => n + 1)}
 					playAgainLabel="New flight"
+					notice={<SignInNudge />}
 				/>
 			) : (
 				<CenteredLoading />
 			)}
 		</Shell>
+	);
+}
+
+/**
+ * Asks guests who keep playing to sign in, so their progress follows them.
+ * Dismissing it hides it for the rest of the browser session.
+ */
+function SignInNudge() {
+	const { data: session, isPending } = authClient.useSession();
+	const save = useSave();
+	const [dismissed, setDismissed] = useState(() => {
+		try {
+			return window.sessionStorage.getItem(NUDGE_DISMISSED_KEY) === "1";
+		} catch {
+			return false;
+		}
+	});
+
+	const played = save?.unlimited.played ?? 0;
+	if (isPending || session || dismissed || played < SIGN_IN_NUDGE_AFTER) {
+		return null;
+	}
+
+	const dismiss = () => {
+		setDismissed(true);
+		try {
+			window.sessionStorage.setItem(NUDGE_DISMISSED_KEY, "1");
+		} catch {
+			// storage blocked: it stays hidden until the page reloads
+		}
+	};
+
+	return (
+		<div className="mt-5 rounded-xl border border-[var(--sd-gold)]/30 bg-white/[0.04] p-4">
+			<p className="font-semibold text-[var(--sd-ink)]">
+				{played} flights in. Keep them.
+			</p>
+			<p className="mt-1 text-sm text-[var(--sd-dim)]">
+				Your progress is tied to this browser. Sign in to keep it on every
+				device.
+			</p>
+			<div className="mt-3 flex flex-wrap gap-2">
+				<Link
+					to="/account"
+					search={{ next: "/unlimited" }}
+					className="sd-btn sd-btn--primary !px-4 !py-2 text-sm"
+				>
+					Sign in
+				</Link>
+				<button
+					type="button"
+					className="sd-btn !px-4 !py-2 text-sm"
+					onClick={dismiss}
+				>
+					Not now
+				</button>
+			</div>
+		</div>
 	);
 }

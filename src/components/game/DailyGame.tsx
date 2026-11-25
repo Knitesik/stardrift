@@ -4,6 +4,7 @@ import { dayNumber } from "#/game/engine";
 import { useSave, useSaveActions } from "#/game/storage";
 import { getNightRound } from "#/game/submit";
 import { Game } from "./Game";
+import { NightLeaderboard } from "./Leaderboard";
 import { Loading, Panel } from "./Shell";
 
 export function DailyGame({
@@ -82,6 +83,7 @@ export function DailyGame({
 			resume={complete ? undefined : unfinished}
 			onProgress={(run) => saveProgress(dateKey, run)}
 			onFinish={(run) => recordDaily(dateKey, run)}
+			notice={<NightLeaderboard dateKey={dateKey} />}
 		/>
 	);
 }
