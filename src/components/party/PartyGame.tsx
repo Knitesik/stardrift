@@ -5,7 +5,8 @@ import { orbitFor } from "#/game/engine";
 import { formatKm, formatShare, TIER_BY_ID } from "#/game/rarity";
 import {
 	LONE_MIN_PLAYERS,
-	PARTY_ROUND_SIZE,
+	PARTY_ROUND_SIZES,
+	type PartyRoundSize,
 	type PlayerView,
 	PROMPT_MS,
 	REVEAL_MS,
@@ -159,7 +160,7 @@ export function PartyGame({ code, name }: { code: string; name: string }) {
 					</div>
 					<ol className="sd-hud__dots" aria-label="progress">
 						{Array.from(
-							{ length: room.prompt?.total ?? PARTY_ROUND_SIZE },
+							{ length: room.prompt?.total ?? room.rounds },
 							(_, i) => {
 								const s = me.flight[i];
 								const t = s?.tier ? TIER_BY_ID[s.tier] : null;
@@ -201,6 +202,8 @@ export function PartyGame({ code, name }: { code: string; name: string }) {
 					you={room.you}
 					iAmHost={iAmHost}
 					hostName={host?.name}
+					rounds={room.rounds}
+					onRounds={party.setRounds}
 					onStart={party.start}
 					onLeave={() => {
 						party.leave();
@@ -377,6 +380,8 @@ export function PartyGame({ code, name }: { code: string; name: string }) {
 					you={room.you}
 					iAmHost={iAmHost}
 					hostName={host?.name}
+					rounds={room.rounds}
+					onRounds={party.setRounds}
 					onAgain={party.again}
 					onLeave={() => {
 						party.leave();
@@ -445,6 +450,8 @@ function Lobby({
 	you,
 	iAmHost,
 	hostName,
+	rounds,
+	onRounds,
 	onStart,
 	onLeave,
 }: {
@@ -453,6 +460,8 @@ function Lobby({
 	you: string;
 	iAmHost: boolean;
 	hostName?: string;
+	rounds: PartyRoundSize;
+	onRounds: (rounds: PartyRoundSize) => void;
 	onStart: () => void;
 	onLeave: () => void;
 }) {
@@ -516,6 +525,13 @@ function Lobby({
 						: ` With ${LONE_MIN_PLAYERS}+ players, a lone answer earns +25%.`}
 				</p>
 
+				<RoundsPicker
+					className="mx-auto mt-5 justify-center"
+					rounds={rounds}
+					iAmHost={iAmHost}
+					onRounds={onRounds}
+				/>
+
 				<div className="mt-6 flex flex-wrap justify-center gap-3">
 					{iAmHost ? (
 						<button
@@ -544,6 +560,8 @@ function Podium({
 	you,
 	iAmHost,
 	hostName,
+	rounds,
+	onRounds,
 	onAgain,
 	onLeave,
 }: {
@@ -551,6 +569,8 @@ function Podium({
 	you: string;
 	iAmHost: boolean;
 	hostName?: string;
+	rounds: PartyRoundSize;
+	onRounds: (rounds: PartyRoundSize) => void;
 	onAgain: () => void;
 	onLeave: () => void;
 }) {
@@ -589,7 +609,13 @@ function Podium({
 					</li>
 				))}
 			</ol>
-			<div className="mt-6 flex flex-wrap gap-2">
+			<RoundsPicker
+				className="mt-6"
+				rounds={rounds}
+				iAmHost={iAmHost}
+				onRounds={onRounds}
+			/>
+			<div className="mt-4 flex flex-wrap gap-2">
 				{iAmHost ? (
 					<button
 						type="button"
@@ -608,5 +634,45 @@ function Podium({
 				</button>
 			</div>
 		</aside>
+	);
+}
+
+/** The host picks how many prompts the next game has; everyone else sees it. */
+function RoundsPicker({
+	rounds,
+	iAmHost,
+	onRounds,
+	className = "",
+}: {
+	rounds: PartyRoundSize;
+	iAmHost: boolean;
+	onRounds: (rounds: PartyRoundSize) => void;
+	className?: string;
+}) {
+	if (!iAmHost) {
+		return (
+			<p className={`text-sm text-[var(--sd-dim)] ${className}`}>
+				{rounds} prompts per game
+			</p>
+		);
+	}
+	return (
+		<fieldset className={`flex flex-wrap items-center gap-2 ${className}`}>
+			<legend className="sr-only">Prompts per game</legend>
+			<span className="text-sm text-[var(--sd-dim)]" aria-hidden>
+				Prompts
+			</span>
+			{PARTY_ROUND_SIZES.map((n) => (
+				<button
+					key={n}
+					type="button"
+					aria-pressed={rounds === n}
+					onClick={() => onRounds(n)}
+					className={`sd-btn !px-3.5 !py-1.5 text-sm ${rounds === n ? "sd-btn--primary" : ""}`}
+				>
+					{n}
+				</button>
+			))}
+		</fieldset>
 	);
 }

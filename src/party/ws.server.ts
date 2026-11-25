@@ -14,11 +14,7 @@ import type { FlightStep } from "#/game/rarity";
 import { stepFor } from "#/game/scoring.server";
 import { getCounts, recordAnswer } from "#/game/tally.server";
 import { auth } from "#/lib/auth";
-import {
-	ClientMessage,
-	PARTY_ROUND_SIZE,
-	type ServerMessage,
-} from "./protocol";
+import { ClientMessage, type ServerMessage } from "./protocol";
 import { makeCode, Room, type RoomDeps } from "./room.server";
 
 type Handler = Parameters<typeof defineWebSocketHandler>[0];
@@ -64,7 +60,7 @@ const deps: RoomDeps = {
 	now: () => Date.now(),
 	newId: () => randomUUID(),
 	newToken: () => randomBytes(18).toString("base64url"),
-	pickRound: (seed) => roundForSeed(seed, PARTY_ROUND_SIZE),
+	pickRound: (seed, size) => roundForSeed(seed, size),
 	match: (promptId, text) => matchAnswer(promptId, text),
 	async score(promptId, answers) {
 		for (const a of answers) await recordAnswer(promptId, a);
@@ -299,6 +295,19 @@ export default defineWebSocketHandler({
 						}
 					})
 					.catch((err) => console.error("[party] start failed", err));
+				return;
+			}
+			case "settings": {
+				const r = room.setRounds(b.playerId, msg.rounds);
+				if (r === "not_host") {
+					send(peer, {
+						t: "error",
+						code: "not_host",
+						message: "Only the host can change the settings.",
+					});
+				} else if (r === "ok") {
+					broadcast(room);
+				}
 				return;
 			}
 			case "answer": {

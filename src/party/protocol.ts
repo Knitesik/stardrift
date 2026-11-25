@@ -9,7 +9,10 @@ export const MAX_PLAYERS = 10;
 export const COUNTDOWN_MS = 3_000;
 export const PROMPT_MS = 30_000;
 export const REVEAL_MS = 7_000;
+/** prompts per party game the host can pick from; PARTY_ROUND_SIZE is the default */
+export const PARTY_ROUND_SIZES = [5, 10, 15, 20] as const;
 export const PARTY_ROUND_SIZE = 10;
+export type PartyRoundSize = (typeof PARTY_ROUND_SIZES)[number];
 /** a lone answer in a room this size or bigger earns the bonus */
 export const LONE_MIN_PLAYERS = 3;
 export const LONE_BONUS = 1.25;
@@ -62,6 +65,10 @@ export const ClientMessage = z.discriminatedUnion("t", [
 		token: z.string().max(64).optional(),
 	}),
 	z.object({ t: z.literal("start") }),
+	z.object({
+		t: z.literal("settings"),
+		rounds: z.literal(PARTY_ROUND_SIZES),
+	}),
 	z.object({
 		t: z.literal("answer"),
 		index: z.number().int().min(0).max(20),
@@ -127,6 +134,8 @@ export interface RoomView {
 	/** your accepted answer for the current prompt, if any */
 	yourAnswer: string | null;
 	game: number;
+	/** prompts in the next (or current) game, picked by the host */
+	rounds: PartyRoundSize;
 }
 
 export type ServerMessage =

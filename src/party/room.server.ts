@@ -16,8 +16,10 @@ import {
 	LONE_BONUS,
 	LONE_MIN_PLAYERS,
 	MAX_PLAYERS,
+	PARTY_ROUND_SIZE,
 	PARTY_SHIPS,
 	type PartyPhase,
+	type PartyRoundSize,
 	type PartyStep,
 	PROMPT_MS,
 	REVEAL_MS,
@@ -28,7 +30,7 @@ export interface RoomDeps {
 	now(): number;
 	newId(): string;
 	newToken(): string;
-	pickRound(seed: string): Promise<Prompt[]>;
+	pickRound(seed: string, size: number): Promise<Prompt[]>;
 	/** canonical answer, or null if not accepted */
 	match(promptId: string, text: string): Promise<string | null>;
 	/**
@@ -77,6 +79,7 @@ export class Room {
 	hostId: string | null = null;
 	readonly players = new Map<string, PlayerState>();
 	round: Prompt[] = [];
+	rounds: PartyRoundSize = PARTY_ROUND_SIZE;
 	index = 0;
 	phaseEndsAt: number | null = null;
 	/** accepted answers for the current prompt: playerId → canonical */
@@ -156,6 +159,19 @@ export class Room {
 
 	/* ───────── game flow ───────── */
 
+	/** The host picks how many prompts the next game has, between games. */
+	setRounds(
+		byId: string,
+		rounds: PartyRoundSize,
+	): "ok" | "not_host" | "wrong_phase" {
+		if (byId !== this.hostId) return "not_host";
+		if (this.busy || (this.phase !== "lobby" && this.phase !== "results")) {
+			return "wrong_phase";
+		}
+		this.rounds = rounds;
+		return "ok";
+	}
+
 	async start(byId: string): Promise<"ok" | "not_host" | "wrong_phase"> {
 		if (byId !== this.hostId) return "not_host";
 		const startable = () =>
@@ -164,7 +180,10 @@ export class Room {
 		this.busy = true;
 		let round: Prompt[];
 		try {
-			round = await this.deps.pickRound(`party:${this.code}:${this.game + 1}`);
+			round = await this.deps.pickRound(
+				`party:${this.code}:${this.game + 1}`,
+				this.rounds,
+			);
 		} finally {
 			this.busy = false;
 		}
@@ -324,6 +343,7 @@ export class Room {
 			phase: this.phase,
 			you: forId,
 			game: this.game,
+			rounds: this.rounds,
 			players: [...this.players.values()].map((p) => {
 				const altitude = p.flight.reduce((km, s) => km + s.climbKm, 0);
 				return {

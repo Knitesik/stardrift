@@ -3,7 +3,12 @@
  * latest room snapshot from the server.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
-import { PARTY_PATH, type RoomView, type ServerMessage } from "./protocol";
+import {
+	PARTY_PATH,
+	type PartyRoundSize,
+	type RoomView,
+	type ServerMessage,
+} from "./protocol";
 
 export type PartyStatus = "connecting" | "open" | "reconnecting" | "closed";
 export type PartyError = Extract<ServerMessage, { t: "error" }>;
@@ -153,6 +158,7 @@ export function usePartySocket(opts: {
 		clearRejected: () => setRejected(null),
 		start: () => send({ t: "start" }),
 		again: () => send({ t: "again" }),
+		setRounds: (rounds: PartyRoundSize) => send({ t: "settings", rounds }),
 		answer: (index: number, text: string) => send({ t: "answer", index, text }),
 		leave: () => {
 			send({ t: "leave" });
