@@ -61,8 +61,8 @@ function Support() {
 						so everyone’s answers can be counted together.
 					</p>
 					<p>
-						The game is free and always will be: no ads, no limits. If you enjoy
-						it, you can chip in whatever feels right.
+						The game is free: no limits. If you enjoy it, you can chip in
+						whatever feels right.
 					</p>
 					<p>
 						Supporters get a{" "}
