@@ -4,7 +4,7 @@ import { ADSENSE_CLIENT } from "#/lib/ads";
 import { seo } from "#/lib/seo";
 
 /** Where privacy questions and data requests go. */
-const CONTACT_EMAIL = "privacy@example.com";
+const CONTACT_EMAIL = "neetesh2000@gmail.com";
 const LAST_UPDATED = "26 November 2026";
 
 declare global {
