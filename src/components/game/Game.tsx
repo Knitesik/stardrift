@@ -25,6 +25,7 @@ import {
 } from "#/game/rarity";
 import type { RunProgress } from "#/game/storage";
 import { getReveal, type PromptReveal, submitAnswer } from "#/game/submit";
+import { ResultsAd } from "./Ads";
 import { FlightCanvas } from "./FlightCanvas";
 
 type Phase = "ready" | "asking" | "revealed" | "done";
@@ -522,6 +523,7 @@ function Results({
 			</div>
 
 			{notice}
+			<ResultsAd />
 
 			<ol className="mt-6 grid gap-3">
 				{round.map((p, i) => {

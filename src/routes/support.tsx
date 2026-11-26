@@ -17,7 +17,7 @@ export const Route = createFileRoute("/support")({
 			title: "Support Stardrift",
 			path: "/support",
 			description:
-				"Chip in to keep the night sky running and get a supporter star on the leaderboard.",
+				"Chip in to keep the night sky running, play ad-free and get a supporter star on the leaderboard.",
 		}),
 	component: Support,
 });
@@ -61,13 +61,15 @@ function Support() {
 						so everyone’s answers can be counted together.
 					</p>
 					<p>
-						The game is free and always will be: no ads, no limits. If you enjoy
-						it, you can chip in whatever feels right.
+						The game is free to play, with no limits. A small ad after each
+						flight helps cover the servers; if you enjoy it, you can chip in
+						whatever feels right instead.
 					</p>
 					<p>
-						Supporters get a{" "}
+						Supporters play ad-free and get a{" "}
 						<span className="text-[var(--sd-gold)]">★ supporter star</span> next
-						to their name on the leaderboard. That’s it, and thank you.
+						to their name on the leaderboard. Sign in with the same email so we
+						know it’s you. Thank you!
 					</p>
 				</div>
 

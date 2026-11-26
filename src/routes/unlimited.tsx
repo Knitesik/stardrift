@@ -166,8 +166,8 @@ function SupportNudge({ played, onDismiss }: NudgeProps) {
 				{played} flights and counting.
 			</p>
 			<p className="mt-1 text-sm text-[var(--sd-dim)]">
-				Stardrift is free with no ads. If you’re enjoying it, you can help keep
-				the night sky running.
+				If you’re enjoying Stardrift, you can help keep the night sky running,
+				and play ad-free.
 			</p>
 			<div className="mt-3 flex flex-wrap gap-2">
 				<Link
