@@ -22,6 +22,15 @@ import appCss from "../styles.css?url";
 // Google Analytics 4 measurement id; replace the placeholder with yours
 const GA_MEASUREMENT_ID = "G-51PPVEVXMX";
 
+/**
+ * Where ads and analytics cookies wait for consent (EEA, UK, Switzerland).
+ * Google's consent message, loaded with AdSense, updates it when they answer.
+ */
+const CONSENT_REGIONS = (
+	"AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI " +
+	"ES SE IS LI NO GB CH"
+).split(" ");
+
 interface MyRouterContext {
 	queryClient: QueryClient;
 }
@@ -103,6 +112,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			{
 				children: `window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
+gtag('consent', 'default', {ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied', region: ${JSON.stringify(CONSENT_REGIONS)}, wait_for_update: 500});
+gtag('consent', 'default', {ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted'});
 gtag('js', new Date());
 gtag('config', '${GA_MEASUREMENT_ID}');`,
 			},

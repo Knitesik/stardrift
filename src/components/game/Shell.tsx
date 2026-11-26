@@ -5,6 +5,7 @@ import planetMid from "#/assets/planets/planet04.png";
 import planetNear from "#/assets/planets/planet09.png";
 import { dayNumber, localDateKey } from "#/game/engine";
 import { authClient } from "#/lib/auth-client";
+import { AdsLoader } from "./Ads";
 import { ShipIcon } from "./icons";
 
 /** "Sign in", or the signed-in call sign, linking to /account. */
@@ -107,6 +108,7 @@ export function Shell({
 				{children}
 			</main>
 			{!immersive && <Footer />}
+			<AdsLoader />
 		</div>
 	);
 }
