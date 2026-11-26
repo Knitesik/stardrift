@@ -17,7 +17,7 @@ export const Route = createFileRoute("/support")({
 			title: "Support Stardrift",
 			path: "/support",
 			description:
-				"Chip in to keep the night sky running, play ad-free and get a supporter star on the leaderboard.",
+				"Chip in to keep the night sky running and get a supporter star on the leaderboard.",
 		}),
 	component: Support,
 });
