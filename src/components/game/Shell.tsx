@@ -159,6 +159,9 @@ function Footer() {
 					<Link to="/support" className="hover:text-[var(--sd-gold)]">
 						Support
 					</Link>
+					<Link to="/privacy" className="hover:text-[var(--sd-gold)]">
+						Privacy
+					</Link>
 					<span className="flex items-center gap-2">
 						<span className="sd-live-dot text-[var(--sd-cyan)]" />
 						New sky at nightfall

@@ -15,6 +15,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AdsDottxtRouteImport } from './routes/ads[.]txt'
 import { Route as DailyRouteImport } from './routes/daily'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as StatsRouteImport } from './routes/stats'
@@ -54,6 +55,11 @@ const DailyRoute = DailyRouteImport.update({
 const McpRoute = McpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/ads.txt': typeof AdsDottxtRoute
   '/daily': typeof DailyRoute
   '/mcp': typeof McpRoute
+  '/privacy': typeof PrivacyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stats': typeof StatsRoute
@@ -132,6 +139,7 @@ export interface FileRoutesByTo {
   '/ads.txt': typeof AdsDottxtRoute
   '/daily': typeof DailyRoute
   '/mcp': typeof McpRoute
+  '/privacy': typeof PrivacyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stats': typeof StatsRoute
@@ -151,6 +159,7 @@ export interface FileRoutesById {
   '/ads.txt': typeof AdsDottxtRoute
   '/daily': typeof DailyRoute
   '/mcp': typeof McpRoute
+  '/privacy': typeof PrivacyRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/stats': typeof StatsRoute
@@ -171,6 +180,7 @@ export interface FileRouteTypes {
     | '/ads.txt'
     | '/daily'
     | '/mcp'
+    | '/privacy'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/stats'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/ads.txt'
     | '/daily'
     | '/mcp'
+    | '/privacy'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/stats'
@@ -207,6 +218,7 @@ export interface FileRouteTypes {
     | '/ads.txt'
     | '/daily'
     | '/mcp'
+    | '/privacy'
     | '/robots.txt'
     | '/sitemap.xml'
     | '/stats'
@@ -226,6 +238,7 @@ export interface RootRouteChildren {
   AdsDottxtRoute: typeof AdsDottxtRoute
   DailyRoute: typeof DailyRoute
   McpRoute: typeof McpRoute
+  PrivacyRoute: typeof PrivacyRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   StatsRoute: typeof StatsRoute
@@ -280,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/mcp'
       fullPath: '/mcp'
       preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -362,6 +382,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdsDottxtRoute: AdsDottxtRoute,
   DailyRoute: DailyRoute,
   McpRoute: McpRoute,
+  PrivacyRoute: PrivacyRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   StatsRoute: StatsRoute,
